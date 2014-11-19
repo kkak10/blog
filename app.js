@@ -10,7 +10,10 @@ var front = require('./routes/front');
 var back = require('./routes/back');
 var include = require('./routes/include');
 var api = require('./routes/api');
+var post = require('./routes/post');
 var app = express();
+var moment = require('moment');
+//moment().format(YYYY-MMMM-h:mm:ss);
 var mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost/blog');
 var Schema = mongoose.Schema;
@@ -26,9 +29,9 @@ app.use(function(req,res,next){
     req.db = boardModel;
     next();
 });
-
-var boardModelObject = new boardModel();
 /*
+var boardModelObject = new boardModel();
+
 boardModelObject.type = "html";
 boardModelObject.title = "안녕하세요";
 boardModelObject.content = "내용입니다.";
@@ -47,9 +50,9 @@ boardModel.find(function(err,data){
         console.log(data);
     }
 })
- */
-console.log(boardModelObject)
 
+console.log(boardModelObject)
+ */
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
@@ -71,6 +74,15 @@ app.use('/api/board', function(req,res){
     var json =  db.find(function(err,data){
         if(!err){
             res.send(data);
+        }
+    });
+});
+app.get('/post/:id',function(req,res){
+    var db = req.db;
+    var id = req.params.id;
+    var json =  db.find({_id:id},function(err,data){
+        if(!err){
+            res.render("post",{"data":data});
         }
     });
 });
