@@ -18,7 +18,7 @@ router.get('/', function(req, res) {
 
 router.get('/', function(req, res) {
     var db = req.db;
-    console.log("hi")
+
     var a = db.find({$and:[
         {$or : [{type:"html"},{type:"css"},{type:"javascript"}]}
     ]}).sort({"reg_date":-1}).find(function(err,data){

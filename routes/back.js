@@ -3,7 +3,13 @@ var router = express.Router();
 
 /* GET users listing. */
 router.get('/', function(req, res) {
-    res.render("back",{})
+    var db = req.db;
+
+    var a = db.find({$and:[
+        {$or : [{type:"PHP"},{type:"Spring"},{type:"Linux"},{type:"Node.js"}]}
+    ]}).sort({"reg_date":-1}).find(function(err,data){
+        res.render('back',{"data":data})
+    })
 });
 
 module.exports = router;

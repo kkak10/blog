@@ -29,6 +29,27 @@
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
 
+
+    <!-- jQuery -->
+    <script src="js/jquery.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="js/bootstrap.min.js"></script>
+
+    <!-- Custom Theme JavaScript -->
+    <script src="js/clean-blog.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $.ajax({
+                url : "/index",
+                type : "post",
+                dataType : "json",
+                success:function(data){
+                    console.dir(data)
+                }
+            })
+        })
+    </script>
 </head>
 
 <body>
@@ -63,7 +84,7 @@
                             <%=data[i].title%>
                         </h2>
                         <h3 class="post-subtitle">
-                            <%=data[i].content%>
+                            <%-data[i].content%>
                         </h3>
                     </a>
                     <p class="post-meta">Posted by <a href="#">LeeHanUr</a> on <%=data[i].reg_date%></p>
@@ -79,16 +100,6 @@
 
     <!-- Footer -->
     <% include include/footer %>
-
-    <!-- jQuery -->
-    <script src="js/jquery.js"></script>
-
-    <!-- Bootstrap Core JavaScript -->
-    <script src="js/bootstrap.min.js"></script>
-
-    <!-- Custom Theme JavaScript -->
-    <script src="js/clean-blog.min.js"></script>
-
 </body>
 
 </html>

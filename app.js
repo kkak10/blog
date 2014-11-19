@@ -11,6 +11,7 @@ var back = require('./routes/back');
 var include = require('./routes/include');
 var api = require('./routes/api');
 var post = require('./routes/post');
+var write = require('./routes/write');
 var app = express();
 var moment = require('moment');
 //moment().format(YYYY-MMMM-h:mm:ss);
@@ -29,20 +30,8 @@ app.use(function(req,res,next){
     req.db = boardModel;
     next();
 });
+
 /*
-var boardModelObject = new boardModel();
-
-boardModelObject.type = "html";
-boardModelObject.title = "안녕하세요";
-boardModelObject.content = "내용입니다.";
-boardModelObject.reg_date = new Date();
-
-boardModelObject.save(function(err){
-    if(err){
-        console.log("실패")
-    }
-});
-
 boardModel.find(function(err,data){
     if(err){
         console.log(err);
@@ -60,6 +49,7 @@ app.set('view engine', 'ejs');
 // uncomment after placing your favicon in /public
 //app.use(favicon(__dirname + '/public/favicon.ico'));
 app.use(logger('dev'));
+app.use(bodyParser({limit: '50mb'}));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
@@ -85,6 +75,33 @@ app.get('/post/:id',function(req,res){
             res.render("post",{"data":data});
         }
     });
+});
+
+app.get('/write',function(req,res){
+    res.render("write",{});
+});
+
+app.post('/write',function(req,res){
+    var boardModelObject = new boardModel();
+
+    boardModelObject.type = req.param("title");
+    boardModelObject.title = req.param("title");
+    boardModelObject.content = req.param("content");
+    boardModelObject.reg_date = new Date();
+
+    boardModelObject.save(function(err){
+        if(err){
+            console.log("실패")
+        }
+    });
+    res.redirect('/');
+/*
+    req.db.find(function(err,data){
+
+    }).sort({"reg_date":-1}).find(function(err,data){
+        res.render("index",{data:data});
+    })
+*/
 });
 
 // catch 404 and forward to error handler
