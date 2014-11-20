@@ -52,13 +52,13 @@
                         <h1> <%=data[0].title%></h1>
                         <h2 class="subheading"></h2>
                         <span class="meta" style="margin-bottom: 20px">Posted by <a href="#">LeeHanUr</a> <%=data[0].reg_date%></span>
-                        <a href="#">
+                        <a  id="updateBtn" href="/update/<%=data[0]._id%>">
                                 <span class="fa-stack fa-lg">
                                     <i class="fa fa-circle fa-stack-2x"></i>
                                     <i class="fa fa-pencil fa-stack-1x fa-inverse"></i>
                                 </span>
                         </a>
-                        <a href="#">
+                        <a id="deleteBtn" href="/delete/<%=data[0]._id%>">
                                 <span class="fa-stack fa-lg">
                                     <i class="fa fa-circle fa-stack-2x"></i>
                                     <i class="fa fa-trash-o fa-stack-1x fa-inverse"></i>

@@ -15,6 +15,8 @@ var write = require('./routes/write');
 var app = express();
 var session = require('express-session')
 var moment = require('moment');
+var fs = require('fs');
+
 //moment().format(YYYY-MMMM-h:mm:ss);
 var mongoose = require('mongoose');
 mongoose.connect('mongodb://hanur.me/blog');
@@ -104,7 +106,7 @@ app.get('/write',function(req,res){
     if(req.session.login){
         res.render("write",{"login":req.session.login});
     }else{
-        res.send("<h1>로그인을 해주세요.</h1>")
+        res.render("write",{"login":req.session.login});
     }
 
 });
@@ -116,13 +118,14 @@ app.post('/write',function(req,res){
     boardModelObject.title = req.param("title");
     boardModelObject.content = req.param("content");
     boardModelObject.reg_date = new Date();
-
-    boardModelObject.save(function(err){
+    console.log(req.params.files);
+    console.log("★")
+    /*boardModelObject.save(function(err){
         if(err){
-            console.log("실패")
+            console.log(err)
         }
-    });
-    res.redirect('/');
+    });*/
+    //res.redirect('/');
 /*
     req.db.find(function(err,data){
 
@@ -131,6 +134,14 @@ app.post('/write',function(req,res){
     })
 */
 });
+
+app.get("/update/:id",function(req,res){
+    var db = req.db;
+    var id = req.params.id;
+    db.find({"_id":id},function(err,data){
+        res.render("update",{data:data,login:req.session.login});
+    })
+})
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

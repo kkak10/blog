@@ -2,20 +2,19 @@
 <html lang="en">
 
 <head>
-
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Hanur Blog</title>
+    <title>Clean Blog - Sample Post</title>
 
     <!-- Bootstrap Core CSS -->
-    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Custom CSS -->
-    <link href="css/clean-blog.min.css" rel="stylesheet">
+    <link href="/css/clean-blog.min.css" rel="stylesheet">
 
     <!-- Custom Fonts -->
     <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
@@ -25,27 +24,29 @@
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
-    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <!-- jQuery -->
     <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
 
     <!-- Bootstrap Core JavaScript -->
-    <script src="js/bootstrap.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
 
     <!-- Custom Theme JavaScript
     <script src="js/clean-blog.min.js"></script>
  -->
     <script src="/js/summernote.js"></script>
-    <link href="css/summernote.css" rel="stylesheet">
+    <link href="/css/summernote.css" rel="stylesheet">
     <![endif]-->
 
     <script>
         $(document).ready(function(){
             $("#submitBtn").click(function(e){
-                $("[name=content]").val($(".note-editable").html());
+                $("[name=content]").val($(".note-editable").html()  );
                 $("#form").submit();
             })
+
+            $("#type > option[value=<%=data[0].type%>]").attr("selected","selected");
 
             $('#content').summernote({
                 height: 500,  //set editable area's height
@@ -59,12 +60,22 @@
                     ['picture',['picture']],
                     ['table',['table']],
                     ['fontname', ['fontname']]
-                ],
-                onImageUpload: function(files, editor, $editable) {
-                    console.log('image upload:', files, editor, editor.insertImage);
-                }
+                ]
             });
+            var content = "<%=data[0].content%>";
+            content = content.replace(/&quot;/gi, "&apos;");
 
+            content = content.replace(/&#35;/gi, "#");
+            content = content.replace(/&lt;/gi, "<");
+            content = content.replace(/&gt;/gi, ">");
+            content = content.replace(/&#40;/gi, "(");
+            content = content.replace(/&#41;/gi, ")");
+            content = content.replace(/&quot;/gi, '');
+            content = content.replace(/&nbsp;/gi, "  ");
+            content = content.replace(/&apos;/gi, "'");
+
+            console.log(content);
+            $('#content').code(content)
         })
     </script>
 </head>
@@ -75,7 +86,7 @@
 
 <!-- Page Header -->
 <!-- Set your background image for this header on the line below. -->
-<header class="intro-header" style="background-image: url('img/home-bg.jpg')">
+<header class="intro-header" style="background-image: url('/img/home-bg.jpg')">
     <div class="container">
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
@@ -94,9 +105,9 @@
     <div class="row">
         <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
             <div class="form-group">
-                <form action="/write" method="post" id="form" enctype="multipart/form-data">
+                <form action="/write" method="post" id="form">
                     <label for="title" style="font-family: 'Open Sans','Helvetica Neue',Helvetica,Arial,sans-serif">Title</label>
-                    <input type="text" name="title" class="form-control" id="title" placeholder="제목"><br />
+                    <input type="text" name="title" class="form-control" id="title" placeholder="제목" value="<%=data[0].title%>"><br />
                     <label for="type" style="font-family: 'Open Sans','Helvetica Neue',Helvetica,Arial,sans-serif">Type</label><br />
                     <select name="type" id="type" class="form-control">
                         <option value="html">HTML</option>
