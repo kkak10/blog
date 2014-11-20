@@ -16,7 +16,7 @@ var app = express();
 var moment = require('moment');
 //moment().format(YYYY-MMMM-h:mm:ss);
 var mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost/blog');
+mongoose.connect('mongodb://hanur.me/blog');
 var Schema = mongoose.Schema;
 var boardSchema = new Schema({
     'type':String,
