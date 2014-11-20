@@ -13,6 +13,7 @@ var api = require('./routes/api');
 var post = require('./routes/post');
 var write = require('./routes/write');
 var app = express();
+var session = require('express-session')
 var moment = require('moment');
 //moment().format(YYYY-MMMM-h:mm:ss);
 var mongoose = require('mongoose');
@@ -45,6 +46,9 @@ console.log(boardModelObject)
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
+app.use(session({
+    secret: 'keyboard cat'
+}))
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(__dirname + '/public/favicon.ico'));
@@ -67,24 +71,48 @@ app.use('/api/board', function(req,res){
         }
     });
 });
+
+app.get('/login/:id/:pw',function(req,res){
+    var id = req.params.id || "";
+    var passwd = req.params.pw || "";
+
+    if(id === "kkak10" && passwd === "hanurme"){
+       req.session.login = true;
+        res.send("<script>window.location.replace('/')</script>")
+       //res.redirect("/");
+    }else{
+        res.send("아이디와 비밀번호를 확인해 주세요.<br />3초후 메인 페이지로 이동합니다. <script>setTimeout(function(){window.location.replace('/');},3000)</script>")
+    }
+});
+
+app.get("/logout",function(req,res){
+   req.session.destroy();
+   res.send("<h1>로그아웃 되셨습니다.</h1>3초후 이동합니다.<script>setTimeout(function(){window.location.replace('/')})</script>")
+});
+
 app.get('/post/:id',function(req,res){
     var db = req.db;
     var id = req.params.id;
     var json =  db.find({_id:id},function(err,data){
         if(!err){
-            res.render("post",{"data":data});
+            res.render("post",{"data":data,"login":req.session.login});
         }
     });
 });
 
 app.get('/write',function(req,res){
-    res.render("write",{});
+    if(req.session.login){
+        res.render("write",{"login":req.session.login});
+    }else{
+        res.send("<h1>로그인을 해주세요.</h1>")
+    }
+
 });
 
 app.post('/write',function(req,res){
     var boardModelObject = new boardModel();
 
-    boardModelObject.type = req.param("title");
+    boardModelObject.type = req.param("type");
     boardModelObject.title = req.param("title");
     boardModelObject.content = req.param("content");
     boardModelObject.reg_date = new Date();

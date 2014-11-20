@@ -8,7 +8,7 @@ router.get('/', function(req, res) {
     var a = db.find({$and:[
         {$or : [{type:"PHP"},{type:"Spring"},{type:"Linux"},{type:"Node.js"}]}
     ]}).sort({"reg_date":-1}).find(function(err,data){
-        res.render('back',{"data":data})
+        res.render('back',{"data":data,"login":req.session.login})
     })
 });
 

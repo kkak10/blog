@@ -1,3 +1,9 @@
+<style>
+    .post-subtitle{
+        height:100px;
+        overflow: hidden;
+    }
+</style>
 <!-- Navigation -->
 <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
     <div class="container-fluid">
@@ -38,9 +44,11 @@
                         <li>
                             <a href="/BACk">BACK-END</a>
                         </li>
+                        <% if(login === true){%>
                         <li>
                             <a href="/write">WRITE</a>
                         </li>
+                        <%}%>
                     </ul>
                 </div>
                 <!-- /.navbar-collapse -->

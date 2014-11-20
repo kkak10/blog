@@ -22,7 +22,7 @@ router.get('/', function(req, res) {
     var a = db.find({$and:[
         {$or : [{type:"html"},{type:"css"},{type:"javascript"}]}
     ]}).sort({"reg_date":-1}).find(function(err,data){
-        res.render('front',{"data":data})
+        res.render('front',{"data":data,"login":req.session.login})
     })
 });
 module.exports = router;
