@@ -40,6 +40,22 @@
     <![endif]-->
 
     <script>
+        function sendFile(file, editor, welEditable) {
+            var img = new FormData();
+            img.append("file", file);
+            $.ajax({
+                data: img,
+                type: "POST",
+                url: "/write/img",
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function(url) {
+                    editor.insertImage(welEditable, url);
+                }
+            });
+        }
+
         $(document).ready(function(){
             $("#submitBtn").click(function(e){
                 $("[name=content]").val($(".note-editable").html()  );
@@ -60,7 +76,10 @@
                     ['picture',['picture']],
                     ['table',['table']],
                     ['fontname', ['fontname']]
-                ]
+                ],
+                onImageUpload: function(files, editor, welEditable) {
+                    sendFile(files[0], editor, welEditable)
+                }
             });
             var content = "<%=data[0].content%>";
             content = content.replace(/&quot;/gi, "&apos;");
@@ -74,7 +93,6 @@
             content = content.replace(/&nbsp;/gi, "  ");
             content = content.replace(/&apos;/gi, "'");
 
-            console.log(content);
             $('#content').code(content)
         })
     </script>
@@ -105,7 +123,7 @@
     <div class="row">
         <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
             <div class="form-group">
-                <form action="/write" method="post" id="form">
+                <form action="/update/<%=data[0]._id%>" method="post" id="form">
                     <label for="title" style="font-family: 'Open Sans','Helvetica Neue',Helvetica,Arial,sans-serif">Title</label>
                     <input type="text" name="title" class="form-control" id="title" placeholder="제목" value="<%=data[0].title%>"><br />
                     <label for="type" style="font-family: 'Open Sans','Helvetica Neue',Helvetica,Arial,sans-serif">Type</label><br />

@@ -47,6 +47,15 @@
                 success:function(data){
                     console.dir(data)
                 }
+            });
+
+            $("#deleteBtn").click(function(){
+                    var check = confirm("삭제하시겠습니까?");
+                    if(check){
+
+                    }else{
+                        return false;
+                    }
             })
         })
     </script>
@@ -87,6 +96,7 @@
                             <%-data[i].content%>
                         </h3>
                     </a>
+                    <%if(login){%>
                     <a  id="updateBtn" href="/update/<%=data[i]._id%>">
                                 <span class="fa-stack fa-lg">
                                     <i class="fa fa-circle fa-stack-2x"></i>
@@ -99,6 +109,7 @@
                                     <i class="fa fa-trash-o fa-stack-1x fa-inverse"></i>
                                 </span>
                     </a>
+                    <%}%>
                     <p class="post-meta">Posted by <a href="#">LeeHanUr</a> on <%=data[i].reg_date%></p>
                 </div>
                 <hr>

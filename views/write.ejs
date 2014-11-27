@@ -41,9 +41,32 @@
     <![endif]-->
 
     <script>
+
+        function trim(s) {
+            s += ''; // 숫자라도 문자열로 변환
+            console.log(s)
+            return s.replace(/^\s*|\s*$/g, '');
+        }
+
+        function sendFile(file, editor, welEditable) {
+            var img = new FormData();
+            img.append("file", file);
+            $.ajax({
+                data: img,
+                type: "POST",
+                url: "/write/img",
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function(url) {
+                    editor.insertImage(welEditable, url);
+                }
+            });
+        }
+
         $(document).ready(function(){
             $("#submitBtn").click(function(e){
-                $("[name=content]").val($(".note-editable").html());
+                $("[name=content]").val(trim($(".note-editable").html()));
                 $("#form").submit();
             })
 
@@ -60,8 +83,8 @@
                     ['table',['table']],
                     ['fontname', ['fontname']]
                 ],
-                onImageUpload: function(files, editor, $editable) {
-                    console.log('image upload:', files, editor, editor.insertImage);
+                onImageUpload: function(files, editor, welEditable) {
+                    sendFile(files[0], editor, welEditable)
                 }
             });
 

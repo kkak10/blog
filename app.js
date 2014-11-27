@@ -16,6 +16,7 @@ var app = express();
 var session = require('express-session')
 var moment = require('moment');
 var fs = require('fs');
+var multer = require("multer");
 
 //moment().format(YYYY-MMMM-h:mm:ss);
 var mongoose = require('mongoose');
@@ -60,6 +61,13 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'uploads')));
+app.use(multer({
+    dest: './uploads/',
+    rename: function (fieldname, filename) {
+        return filename.replace(/\W+/g, '-').toLowerCase() + Date.now()
+    }
+}))
 
 app.use('/', routes);
 app.use('/FRONT', front);
@@ -118,14 +126,14 @@ app.post('/write',function(req,res){
     boardModelObject.title = req.param("title");
     boardModelObject.content = req.param("content");
     boardModelObject.reg_date = new Date();
-    console.log(req.params.files);
-    console.log("★")
-    /*boardModelObject.save(function(err){
+    boardModelObject.save(function(err){
         if(err){
             console.log(err)
+        }else{
+            res.redirect('/');
         }
-    });*/
-    //res.redirect('/');
+    });
+
 /*
     req.db.find(function(err,data){
 
@@ -135,13 +143,51 @@ app.post('/write',function(req,res){
 */
 });
 
+app.post("/write/img",function(req,res){
+    res.send("/" + req.files.file.name)
+})
+
 app.get("/update/:id",function(req,res){
     var db = req.db;
     var id = req.params.id;
     db.find({"_id":id},function(err,data){
         res.render("update",{data:data,login:req.session.login});
     })
-})
+});
+
+app.post("/update/:id",function(req,res){
+    var db = req.db;
+    var boardModelObject = new boardModel();
+    var id = req.params.id;
+    console.log(id)
+    boardModelObject.type = req.param("type");
+    boardModelObject.title = req.param("title");
+    boardModelObject.content = req.param("content");
+    boardModelObject.reg_date = new Date();
+
+    boardModelObject.update(
+        {_id : id},
+        {
+            $set:{
+                title : boardModelObject.title,
+                content : boardModelObject.content,
+                reg_date : new Date()
+            }
+        },function(err,a){
+            console.log(err)
+            console.log(a)
+        }
+    );
+    //res.redirect("/")
+});
+
+app.get("/delete/:id",function(req,res){
+    var db = req.db;
+    var id = req.params.id;
+    db.remove({"_id":id},function(err,data){
+        res.redirect("/")
+    })
+});
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
