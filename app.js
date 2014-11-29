@@ -178,7 +178,7 @@ app.post("/update/:id",function(req,res){
             console.log(a)
         }
     );
-    //res.redirect("/")
+    res.redirect("/")
 });
 
 app.get("/delete/:id",function(req,res){
