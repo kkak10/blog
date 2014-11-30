@@ -165,7 +165,7 @@ app.post("/update/:id",function(req,res){
     boardModelObject.content = req.param("content");
     boardModelObject.reg_date = new Date();
 
-    boardModelObject.update(
+    boardModel.update(
         {_id : id},
         {
             $set:{
